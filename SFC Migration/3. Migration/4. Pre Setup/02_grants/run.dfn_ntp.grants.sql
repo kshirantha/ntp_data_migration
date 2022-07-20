@@ -1,0 +1,12 @@
+SPOOL log.run.dfn_ntp.grants REPLACE
+
+WHENEVER SQLERROR EXIT
+SET ECHO ON
+SET DEFINE OFF
+SET SQLBLANKLINES ON
+
+@@dfn_ntp.grants.sql
+
+SPOOL OFF
+
+EXIT

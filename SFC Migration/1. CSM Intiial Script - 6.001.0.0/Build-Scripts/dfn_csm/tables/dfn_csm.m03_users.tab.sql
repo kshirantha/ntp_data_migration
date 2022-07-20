@@ -1,0 +1,22 @@
+CREATE TABLE dfn_csm.m03_users
+(
+    m03_id          NUMBER (20, 0) NOT NULL,
+    m03_user_name   NVARCHAR2 (50)
+)
+SEGMENT CREATION DEFERRED
+NOPARALLEL
+LOGGING
+MONITORING
+/
+
+
+
+ALTER TABLE dfn_csm.m03_users
+ADD CONSTRAINT pk_m03_id PRIMARY KEY (m03_id)
+USING INDEX
+/
+
+COMMENT ON COLUMN dfn_csm.m03_users.m03_id IS 'PK'
+/
+
+

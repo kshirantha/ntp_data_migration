@@ -1,0 +1,28 @@
+DFN_DB_CONN=192.168.14.240:1523/NTPMIG
+DFN_ALG_PWD=DFN_ALGO/\"password\"
+DFN_ARC_PWD=DFN_ARC/\"password\"
+DFN_NTP_PWD=DFN_NTP/\"password\"
+DFN_MIG_PWD=DFN_MIG/\"password\"
+DFN_PRC_PWD=DFN_PRICE/\"password\"
+DFN_CSM_PWD=DFN_CSM/\"password\"
+
+# Password format => \"password\"
+# "&" Character will not be supported inside the password
+# "%" Character is required to use 2 times to represent single "%" character.
+# "^" Character is required to use 4 times to represent single "^" character.
+# In execute.bat and recompile.bat files
+	# %1 => DFN_DB_CONN
+	# %str2% => DFN_ALG_PWD
+	# %str3% => DFN_ARC_PWD
+	# %str4% => DFN_NTP_PWD
+	# %str5% => DFN_MIG_PWD
+	# %str6% => DFN_PRC_PWD
+	# %str7% => DFN_CSM_PWD
+# Not available any Schema in Database: Please refer following method
+	# DFN_ALG_PWD=N/A
+	# DFN_ARC_PWD=N/A
+	# DFN_NTP_PWD=N/A
+	# DFN_MIG_PWD=N/A
+	# DFN_PRC_PWD=N/A
+	# DFN_CSM_PWD=N/A
+            

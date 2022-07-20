@@ -1,0 +1,12 @@
+SPOOL log.run.dfn_ntp.app_seq_store REPLACE
+
+WHENEVER SQLERROR EXIT
+SET ECHO ON
+SET DEFINE OFF
+SET SQLBLANKLINES ON
+
+@@01_app_seq_store.sql
+
+SPOOL OFF
+
+EXIT

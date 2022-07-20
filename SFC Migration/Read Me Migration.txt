@@ -1,0 +1,55 @@
+Initial Data Migration
+
+01) 0.Clean All Objects (This is to DROP all the DB Objects)
+02) 1.CSM Intiial Script - 6.001.0.0
+
+03) 2.Initial Scripts 10.004.7.0\Build-Scripts
+04) 2.Initial Scripts 10.004.7.0\LoadData
+
+
+05) 3.Migration\Index Rebuild
+06) 3.Migration\Schema Stat Gather
+07) 3.Migration\Pre Setup
+08) 3.Migration\Pre Check
+09) 3.Migration\Migration
+10) 3.Migration\Price Migration
+11) 3.Migration\Index Rebuild
+12) 3.Migration\Schema Stat Gather
+13) 3.Migration\Verification
+
+Scripts Inside 4.ManualScripts\PTTP Scripts (To Support PTTP)
+Schedule the DB jobs.
+
+________________________________________________________________________
+
+
+Daily DataMigration
+
+01) 3.Migration\Index Rebuild
+02) 3.Migration\Schema Stat Gather
+03) 3.Migration\Migration
+04) 3.Migration\Price Migration
+05) 3.Migration\Index Rebuild
+06) 3.Migration\Schema Stat Gather
+07) 3.Migration\Verification
+
+Scripts Inside 4.ManualScripts\PTTP Scripts (To Support PTTP)
+
+_________________________________________________________________________
+
+
+Team Decides to do a Cleanup Migration. (Without Initial Script)
+
+01) 3.Migration\Clean
+02) 3.Migration\Index Rebuild
+03) 3.Migration\Schema Stat Gather
+04) 3.Migration\Pre Setup
+05) 3.Migration\Pre Check
+06) 3.Migration\Migration
+07) 3.Migration\Price Migration
+08) 3.Migration\Index Rebuild
+09) 3.Migration\chema Stat Gather
+10) 3.Migration\Verification
+
+Scripts Inside 4.ManualScripts\PTTP Scripts (To Support PTTP)
+Schedule the DB jobs.

@@ -1,0 +1,10 @@
+CREATE OR REPLACE FUNCTION dfn_ntp.fn_get_t78_id
+    RETURN CHARACTER
+IS
+    id   VARCHAR2 (25);
+BEGIN
+    SELECT seq_t78_id.NEXTVAL INTO id FROM DUAL;
+
+    RETURN id;
+END;
+/

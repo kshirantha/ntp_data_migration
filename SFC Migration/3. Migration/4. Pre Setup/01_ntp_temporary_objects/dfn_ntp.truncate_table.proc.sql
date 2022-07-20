@@ -1,0 +1,6 @@
+CREATE OR REPLACE PROCEDURE dfn_ntp.truncate_table (p_table IN VARCHAR2)
+IS
+BEGIN
+    EXECUTE IMMEDIATE 'TRUNCATE TABLE ' || p_table;
+END;
+/

@@ -1,0 +1,641 @@
+SQL> SET DEFINE OFF
+SQL> SET SQLBLANKLINES ON
+SQL> 
+SQL> @@dfn_mig.esp_todays_snapshots.data.sql
+SQL> DECLARE
+  2  	 l_sqlerrm   VARCHAR2 (4000);
+  3  
+  4  	 l_rec_cnt   NUMBER := 0;
+  5  BEGIN
+  6  	 DELETE FROM error_log
+  7  	       WHERE mig_table = 'ESP_TODAYS_SNAPSHOTS';
+  8  
+  9  	 FOR i
+ 10  	     IN (SELECT mub.companycode,
+ 11  			NVL (map16.map16_ntp_code, mub.exchangecode)
+ 12  			    AS exchangecode,
+ 13  			mub.symbol,
+ 14  			mub.sector,
+ 15  			mub.symboldescription_1,
+ 16  			mub.symboldescription_2,
+ 17  			mub.symbolshortdescription_1,
+ 18  			mub.symbolshortdescription_2,
+ 19  			mub.symbolstatus,
+ 20  			mub.assetclass,
+ 21  			mub.currency,
+ 22  			mub.lastupdatedtime,
+ 23  			mub.lasttradetime,
+ 24  			mub.tradetick,
+ 25  			mub.asktick,
+ 26  			mub.bidtick,
+ 27  			mub.bestaskprice,
+ 28  			mub.bestaskquantity,
+ 29  			mub.bestbidprice,
+ 30  			mub.bestbidquantity,
+ 31  			mub.lasttradeprice,
+ 32  			mub.lasttradequantity,
+ 33  			mub.high,
+ 34  			mub.low,
+ 35  			mub.change,
+ 36  			mub.volume,
+ 37  			mub.turnover,
+ 38  			mub.percentchanged,
+ 39  			mub.previousclosed,
+ 40  			mub.todaysopen,
+ 41  			mub.updated,
+ 42  			mub.nooftrades,
+ 43  			mub.noofbids,
+ 44  			mub.noofasks,
+ 45  			mub.vwap,
+ 46  			mub.minprice,
+ 47  			mub.maxprice,
+ 48  			mub.highpriceof52weeks,
+ 49  			mub.highpriceof52weeksdate,
+ 50  			mub.lowpriceof52weeks,
+ 51  			mub.lowpriceof52weeksdate,
+ 52  			mub.is52weeksconsistsoflasttrade,
+ 53  			mub.beginingofyear,
+ 54  			mub.lastsequenceno,
+ 55  			mub.per,
+ 56  			mub.pbr,
+ 57  			mub.marketcap,
+ 58  			mub.yield,
+ 59  			mub.totalbidqty,
+ 60  			mub.totalaskqty,
+ 61  			mub.highask,
+ 62  			mub.lowbid,
+ 63  			mub.lastaskprice,
+ 64  			mub.lastbidprice,
+ 65  			mub.bidaskratio,
+ 66  			mub.simpleavgask,
+ 67  			mub.weightedavgask,
+ 68  			mub.simpleavgbid,
+ 69  			mub.weightedavgbid,
+ 70  			mub.avgvolume,
+ 71  			mub.acronym_1,
+ 72  			mub.acronym_2,
+ 73  			mub.paid_shares,
+ 74  			mub.face_value,
+ 75  			mub.coupon_value,
+ 76  			mub.coupon_date,
+ 77  			mub.net_profit,
+ 78  			mub.net_profit_date,
+ 79  			mub.eps,
+ 80  			mub.lasttradeddate,
+ 81  			mub.is_active,
+ 82  			mub.todaysclosed,
+ 83  			mub.lasttradedprice,
+ 84  			mub.created_date,
+ 85  			mub.ref_price,
+ 86  			mub.strikeprice,
+ 87  			mub.openinterest,
+ 88  			mub.expirydate,
+ 89  			mub.optiontype,
+ 90  			mub.instrumenttype,
+ 91  			mub.equitysymbol,
+ 92  			mub.benchmark,
+ 93  			mub.performance_ytd,
+ 94  			mub.performance_12m,
+ 95  			mub.performance_3y,
+ 96  			mub.performance_5y,
+ 97  			mub.management_fee,
+ 98  			mub.dealing_deadline,
+ 99  			mub.no_of_shares_for_foreigners,
+100  			mub.cashinnooforders,
+101  			mub.cashinturnover,
+102  			mub.cashinvolume,
+103  			mub.cashoutnooforders,
+104  			mub.cashoutturnover,
+105  			mub.cashoutvolume,
+106  			mub.change_in_openinterest,
+107  			mub.settlment_price,
+108  			mub.issue_capital,
+109  			mub.tick_size,
+110  			mub.intrinsic_value,
+111  			mub.float_shares,
+112  			mub.settle_type,
+113  			mub.twap,
+114  			mub.closing_vwap,
+115  			mub.loosing_category,
+116  			mub.nominal_value,
+117  			mub.shariah_status,
+118  			mub.toprice,
+119  			mub.tovolume,
+120  			mub.tcprice,
+121  			mub.tcvolume,
+122  			mub.twap_prm,
+123  			mub.avg_trd_prc_prm,
+124  			mub.market_capital,
+125  			mub.share_capital,
+126  			mub.day_count_method,
+127  			mub.calculated_vwap,
+128  			mub.monthly_high,
+129  			mub.monthly_low,
+130  			mub.yearly_high,
+131  			mub.yearly_low,
+132  			mub.static_min,
+133  			mub.static_max,
+134  			mub.settlement_price,
+135  			ntp.exchangecode AS ntp_exchangecode,
+136  			ntp.symbol AS ntp_symbol
+137  		   FROM mubasher_price.esp_todays_snapshots@mubasher_price_link mub,
+138  			map16_optional_exchanges_m01 map16,
+139  			dfn_price.esp_todays_snapshots ntp
+140  		  WHERE     mub.exchangecode = map16.map16_oms_code(+)
+141  			AND NVL (map16.map16_ntp_code, mub.exchangecode) =
+142  				ntp.exchangecode(+)
+143  			AND mub.symbol = ntp.symbol(+))
+144  	 LOOP
+145  	     BEGIN
+146  		 IF (i.ntp_exchangecode IS NULL AND i.ntp_symbol IS NULL)
+147  		 THEN
+148  		     INSERT
+149  		       INTO dfn_price.esp_todays_snapshots (
+150  				companycode,
+151  				exchangecode,
+152  				symbol,
+153  				sector,
+154  				symboldescription_1,
+155  				symboldescription_2,
+156  				symbolshortdescription_1,
+157  				symbolshortdescription_2,
+158  				symbolstatus,
+159  				assetclass,
+160  				currency,
+161  				lastupdatedtime,
+162  				lasttradetime,
+163  				tradetick,
+164  				asktick,
+165  				bidtick,
+166  				bestaskprice,
+167  				bestaskquantity,
+168  				bestbidprice,
+169  				bestbidquantity,
+170  				lasttradeprice,
+171  				lasttradequantity,
+172  				high,
+173  				low,
+174  				change,
+175  				volume,
+176  				turnover,
+177  				percentchanged,
+178  				previousclosed,
+179  				todaysopen,
+180  				updated,
+181  				nooftrades,
+182  				noofbids,
+183  				noofasks,
+184  				vwap,
+185  				minprice,
+186  				maxprice,
+187  				highpriceof52weeks,
+188  				highpriceof52weeksdate,
+189  				lowpriceof52weeks,
+190  				lowpriceof52weeksdate,
+191  				is52weeksconsistsoflasttrade,
+192  				beginingofyear,
+193  				lastsequenceno,
+194  				per,
+195  				pbr,
+196  				marketcap,
+197  				yield,
+198  				totalbidqty,
+199  				totalaskqty,
+200  				highask,
+201  				lowbid,
+202  				lastaskprice,
+203  				lastbidprice,
+204  				bidaskratio,
+205  				simpleavgask,
+206  				weightedavgask,
+207  				simpleavgbid,
+208  				weightedavgbid,
+209  				avgvolume,
+210  				acronym_1,
+211  				acronym_2,
+212  				paid_shares,
+213  				face_value,
+214  				coupon_value,
+215  				coupon_date,
+216  				net_profit,
+217  				net_profit_date,
+218  				eps,
+219  				lasttradeddate,
+220  				is_active,
+221  				todaysclosed,
+222  				lasttradedprice,
+223  				created_date,
+224  				ref_price,
+225  				strikeprice,
+226  				openinterest,
+227  				expirydate,
+228  				optiontype,
+229  				instrumenttype,
+230  				equitysymbol,
+231  				benchmark,
+232  				performance_ytd,
+233  				performance_12m,
+234  				performance_3y,
+235  				performance_5y,
+236  				management_fee,
+237  				dealing_deadline,
+238  				no_of_shares_for_foreigners,
+239  				cashinnooforders,
+240  				cashinturnover,
+241  				cashinvolume,
+242  				cashoutnooforders,
+243  				cashoutturnover,
+244  				cashoutvolume,
+245  				change_in_openinterest,
+246  				settlment_price,
+247  				issue_capital,
+248  				tick_size,
+249  				intrinsic_value,
+250  				float_shares,
+251  				settle_type,
+252  				twap,
+253  				closing_vwap,
+254  				loosing_category,
+255  				nominal_value,
+256  				shariah_status,
+257  				toprice,
+258  				tovolume,
+259  				tcprice,
+260  				tcvolume,
+261  				twap_prm,
+262  				avg_trd_prc_prm,
+263  				market_capital,
+264  				share_capital,
+265  				day_count_method,
+266  				calculated_vwap,
+267  				monthly_high,
+268  				monthly_low,
+269  				yearly_high,
+270  				yearly_low,
+271  				static_min,
+272  				static_max,
+273  				settlement_price)
+274  		     VALUES (i.companycode,
+275  			     i.exchangecode,
+276  			     i.symbol,
+277  			     i.sector,
+278  			     i.symboldescription_1,
+279  			     i.symboldescription_2,
+280  			     i.symbolshortdescription_1,
+281  			     i.symbolshortdescription_2,
+282  			     i.symbolstatus,
+283  			     i.assetclass,
+284  			     i.currency,
+285  			     i.lastupdatedtime,
+286  			     i.lasttradetime,
+287  			     i.tradetick,
+288  			     i.asktick,
+289  			     i.bidtick,
+290  			     i.bestaskprice,
+291  			     i.bestaskquantity,
+292  			     i.bestbidprice,
+293  			     i.bestbidquantity,
+294  			     i.lasttradeprice,
+295  			     i.lasttradequantity,
+296  			     i.high,
+297  			     i.low,
+298  			     i.change,
+299  			     i.volume,
+300  			     i.turnover,
+301  			     i.percentchanged,
+302  			     i.previousclosed,
+303  			     i.todaysopen,
+304  			     i.updated,
+305  			     i.nooftrades,
+306  			     i.noofbids,
+307  			     i.noofasks,
+308  			     i.vwap,
+309  			     i.minprice,
+310  			     i.maxprice,
+311  			     i.highpriceof52weeks,
+312  			     i.highpriceof52weeksdate,
+313  			     i.lowpriceof52weeks,
+314  			     i.lowpriceof52weeksdate,
+315  			     i.is52weeksconsistsoflasttrade,
+316  			     i.beginingofyear,
+317  			     i.lastsequenceno,
+318  			     i.per,
+319  			     i.pbr,
+320  			     i.marketcap,
+321  			     i.yield,
+322  			     i.totalbidqty,
+323  			     i.totalaskqty,
+324  			     i.highask,
+325  			     i.lowbid,
+326  			     i.lastaskprice,
+327  			     i.lastbidprice,
+328  			     i.bidaskratio,
+329  			     i.simpleavgask,
+330  			     i.weightedavgask,
+331  			     i.simpleavgbid,
+332  			     i.weightedavgbid,
+333  			     i.avgvolume,
+334  			     i.acronym_1,
+335  			     i.acronym_2,
+336  			     i.paid_shares,
+337  			     i.face_value,
+338  			     i.coupon_value,
+339  			     i.coupon_date,
+340  			     i.net_profit,
+341  			     i.net_profit_date,
+342  			     i.eps,
+343  			     i.lasttradeddate,
+344  			     i.is_active,
+345  			     i.todaysclosed,
+346  			     i.lasttradedprice,
+347  			     i.created_date,
+348  			     i.ref_price,
+349  			     i.strikeprice,
+350  			     i.openinterest,
+351  			     i.expirydate,
+352  			     i.optiontype,
+353  			     i.instrumenttype,
+354  			     i.equitysymbol,
+355  			     i.benchmark,
+356  			     i.performance_ytd,
+357  			     i.performance_12m,
+358  			     i.performance_3y,
+359  			     i.performance_5y,
+360  			     i.management_fee,
+361  			     i.dealing_deadline,
+362  			     i.no_of_shares_for_foreigners,
+363  			     i.cashinnooforders,
+364  			     i.cashinturnover,
+365  			     i.cashinvolume,
+366  			     i.cashoutnooforders,
+367  			     i.cashoutturnover,
+368  			     i.cashoutvolume,
+369  			     i.change_in_openinterest,
+370  			     i.settlment_price,
+371  			     i.issue_capital,
+372  			     i.tick_size,
+373  			     i.intrinsic_value,
+374  			     i.float_shares,
+375  			     i.settle_type,
+376  			     i.twap,
+377  			     i.closing_vwap,
+378  			     i.loosing_category,
+379  			     i.nominal_value,
+380  			     i.shariah_status,
+381  			     i.toprice,
+382  			     i.tovolume,
+383  			     i.tcprice,
+384  			     i.tcvolume,
+385  			     i.twap_prm,
+386  			     i.avg_trd_prc_prm,
+387  			     i.market_capital,
+388  			     i.share_capital,
+389  			     i.day_count_method,
+390  			     i.calculated_vwap,
+391  			     i.monthly_high,
+392  			     i.monthly_low,
+393  			     i.yearly_high,
+394  			     i.yearly_low,
+395  			     i.static_min,
+396  			     i.static_max,
+397  			     i.settlement_price);
+398  		 ELSE
+399  		     UPDATE dfn_price.esp_todays_snapshots
+400  			SET todaysclosed = i.todaysclosed,
+401  			    previousclosed = i.previousclosed,
+402  			    minprice = i.minprice,
+403  			    maxprice = i.maxprice,
+404  			    vwap = i.vwap,
+405  			    lasttradeprice = i.lasttradeprice,
+406  			    bestbidprice = i.bestbidprice,
+407  			    bestaskprice = i.bestaskprice,
+408  			    strikeprice = i.strikeprice,
+409  			    static_min = i.static_min,
+410  			    static_max = i.static_max,
+411  			    settlement_price = i.settlement_price
+412  		      WHERE	exchangecode = i.ntp_exchangecode
+413  			    AND symbol = i.ntp_symbol;
+414  		 END IF;
+415  
+416  		 l_rec_cnt := l_rec_cnt + 1;
+417  
+418  		 IF MOD (l_rec_cnt, 25000) = 0
+419  		 THEN
+420  		     COMMIT;
+421  		 END IF;
+422  	     EXCEPTION
+423  		 WHEN OTHERS
+424  		 THEN
+425  		     l_sqlerrm := SUBSTR (SQLERRM, 1, 512);
+426  
+427  		     INSERT INTO error_log
+428  			  VALUES (
+429  				     'ESP_TODAYS_SNAPSHOTS',
+430  					' Exg: '
+431  				     || i.exchangecode
+432  				     || ' - '
+433  				     || ' Symbol: '
+434  				     || i.symbol,
+435  					' Exg: '
+436  				     || i.exchangecode
+437  				     || ' - '
+438  				     || ' Symbol: '
+439  				     || i.symbol,
+440  				     l_sqlerrm,
+441  				     CASE
+442  					 WHEN (    i.ntp_exchangecode IS NULL
+443  					       AND i.ntp_symbol IS NULL)
+444  					 THEN
+445  					     'INSERT'
+446  					 ELSE
+447  					     'UPDATE'
+448  				     END,
+449  				     SYSDATE);
+450  	     END;
+451  	 END LOOP;
+452  END;
+453  /
+
+PL/SQL procedure successfully completed.
+
+SQL> COMMIT
+  2  /
+
+Commit complete.
+
+SQL> @@dfn_mig.esp_transactions_complete.data.sql
+SQL> DECLARE
+  2  	 l_sqlerrm   VARCHAR2 (4000);
+  3  
+  4  	 l_rec_cnt   NUMBER := 0;
+  5  BEGIN
+  6  	 DELETE FROM error_log
+  7  	       WHERE mig_table = 'ESP_TRANSACTIONS_COMPLETE';
+  8  
+  9  	 FOR i
+ 10  	     IN (SELECT esp.transactiondate,
+ 11  			NVL (map16.map16_ntp_code, esp.exchangecode)
+ 12  			    AS exchangecode,
+ 13  			esp.symbol,
+ 14  			esp.open,
+ 15  			esp.high,
+ 16  			esp.low,
+ 17  			esp.close,
+ 18  			esp.change,
+ 19  			esp.percentchanged,
+ 20  			esp.previousclosed,
+ 21  			esp.volume,
+ 22  			esp.turnover,
+ 23  			esp.isindex,
+ 24  			esp.splitfactor,
+ 25  			esp.nooftrades,
+ 26  			esp.vwap,
+ 27  			esp.lasttradeprice,
+ 28  			esp.todaysopen,
+ 29  			new_esp.transactiondate AS mapped_txn_date,
+ 30  			new_esp.exchangecode AS mapped_exchange,
+ 31  			new_esp.symbol AS mapped_symbol
+ 32  		   FROM mubasher_price.esp_transactions_complete@mubasher_price_link esp,
+ 33  			map16_optional_exchanges_m01 map16,
+ 34  			dfn_price.esp_transactions_complete new_esp
+ 35  		  WHERE     esp.transactiondate = new_esp.transactiondate(+)
+ 36  			AND esp.exchangecode = map16.map16_oms_code(+)
+ 37  			AND NVL (map16.map16_ntp_code, esp.exchangecode) =
+ 38  				new_esp.exchangecode(+)
+ 39  			AND esp.symbol = new_esp.symbol(+))
+ 40  	 LOOP
+ 41  	     BEGIN
+ 42  		 IF (	 i.mapped_txn_date IS NULL
+ 43  		     AND i.mapped_exchange IS NULL
+ 44  		     AND i.mapped_symbol IS NULL)
+ 45  		 THEN
+ 46  		     INSERT
+ 47  		       INTO dfn_price.esp_transactions_complete (transactiondate,
+ 48  								 exchangecode,
+ 49  								 symbol,
+ 50  								 open,
+ 51  								 high,
+ 52  								 low,
+ 53  								 close,
+ 54  								 change,
+ 55  								 percentchanged,
+ 56  								 previousclosed,
+ 57  								 volume,
+ 58  								 turnover,
+ 59  								 isindex,
+ 60  								 nooftrades,
+ 61  								 vwap,
+ 62  								 lasttradeprice,
+ 63  								 todaysopen,
+ 64  								 lasttradedprice,
+ 65  								 lasttradeddate,
+ 66  								 bestaskprice,
+ 67  								 bestaskquantity,
+ 68  								 bestbidprice,
+ 69  								 bestbidquantity)
+ 70  		     VALUES (i.transactiondate, -- transactiondate
+ 71  			     i.exchangecode, -- exchangecode
+ 72  			     i.symbol, -- symbol
+ 73  			     i.open, -- open
+ 74  			     i.high, -- high
+ 75  			     i.low, -- low
+ 76  			     i.close, -- close
+ 77  			     i.change, -- change
+ 78  			     i.percentchanged, -- percentchanged
+ 79  			     i.previousclosed, -- previousclosed
+ 80  			     i.volume, -- volume
+ 81  			     i.turnover, -- turnover
+ 82  			     i.isindex, -- isindex
+ 83  			     i.nooftrades, -- nooftrades
+ 84  			     i.vwap, -- vwap
+ 85  			     i.lasttradeprice, -- lasttradeprice
+ 86  			     i.todaysopen, -- todaysopen
+ 87  			     NULL, -- lasttradedprice | Not Available
+ 88  			     NULL, -- lasttradeddate | Not Available
+ 89  			     NULL, -- bestaskprice | Not Available
+ 90  			     NULL, -- bestaskquantity | Not Available
+ 91  			     NULL, -- bestbidprice | Not Available
+ 92  			     NULL -- bestbidquantity | Not Available
+ 93  				 );
+ 94  		 ELSE
+ 95  		     UPDATE dfn_price.esp_transactions_complete
+ 96  			SET open = i.open, -- open
+ 97  			    high = i.high, -- hign
+ 98  			    low = i.low, -- low
+ 99  			    close = i.close, -- close
+100  			    change = i.change, -- change
+101  			    percentchanged = i.percentchanged, -- percentchanged
+102  			    previousclosed = i.previousclosed, -- previousclosed
+103  			    volume = i.volume, -- volume
+104  			    turnover = i.turnover, -- turnover
+105  			    isindex = i.isindex, -- isindex
+106  			    nooftrades = i.nooftrades, -- nooftrades
+107  			    vwap = i.vwap, -- vwap
+108  			    lasttradeprice = i.lasttradeprice, -- lasttradeprice
+109  			    todaysopen = i.todaysopen, -- todaysopen
+110  			    lasttradedprice = NULL, -- lasttradedprice | Not Available
+111  			    lasttradeddate = NULL, -- lasttradeddate | Not Available
+112  			    bestaskprice = NULL, -- bestaskprice | Not Available
+113  			    bestaskquantity = NULL, -- bestaskquantity | Not Available
+114  			    bestbidprice = NULL, -- bestbidprice | Not Available
+115  			    bestbidquantity = NULL -- bestbidquantity | Not Available
+116  		      WHERE	transactiondate = i.mapped_txn_date
+117  			    AND exchangecode = i.mapped_exchange
+118  			    AND symbol = i.mapped_symbol;
+119  		 END IF;
+120  
+121  		 l_rec_cnt := l_rec_cnt + 1;
+122  
+123  		 IF MOD (l_rec_cnt, 25000) = 0
+124  		 THEN
+125  		     COMMIT;
+126  		 END IF;
+127  	     EXCEPTION
+128  		 WHEN OTHERS
+129  		 THEN
+130  		     l_sqlerrm := SUBSTR (SQLERRM, 1, 512);
+131  
+132  		     INSERT INTO error_log
+133  			  VALUES (
+134  				     'ESP_TRANSACTIONS_COMPLETE',
+135  					'Date: '
+136  				     || i.transactiondate
+137  				     || ' - '
+138  				     || ' Exg: '
+139  				     || i.exchangecode
+140  				     || ' - '
+141  				     || ' Symbol: '
+142  				     || i.symbol,
+143  					'Date: '
+144  				     || i.transactiondate
+145  				     || ' - '
+146  				     || ' Exg: '
+147  				     || i.exchangecode
+148  				     || ' - '
+149  				     || ' Symbol: '
+150  				     || i.symbol,
+151  				     l_sqlerrm,
+152  				     CASE
+153  					 WHEN (    i.mapped_txn_date IS NULL
+154  					       AND i.mapped_exchange IS NULL
+155  					       AND i.mapped_symbol IS NULL)
+156  					 THEN
+157  					     'INSERT'
+158  					 ELSE
+159  					     'UPDATE'
+160  				     END,
+161  				     SYSDATE);
+162  	     END;
+163  	 END LOOP;
+164  END;
+165  /
+
+PL/SQL procedure successfully completed.
+
+SQL> COMMIT
+  2  /
+
+Commit complete.
+
+SQL> 
+SQL> SPOOL OFF

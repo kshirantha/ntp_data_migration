@@ -1,0 +1,1 @@
+DB_PATCH_VERSION	|SCRIPT_TYPE    	|TARGET_SCHEEMA	|FILE_NAME                    	|LINE_NO	|ERROR_TYPE	|ERROR_DESCRIPTION                           	

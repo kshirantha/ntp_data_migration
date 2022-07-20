@@ -1,0 +1,14 @@
+CREATE TABLE dfn_ntp.t14_notification_data
+(
+    t14_t13_id            NUMBER (10, 0),
+    t14_attachment_name   VARCHAR2 (100 BYTE),
+    t14_attachment_data   BLOB,
+    t14_custom_type       VARCHAR2 (50 BYTE) DEFAULT 1
+)
+SEGMENT CREATION IMMEDIATE
+LOB ("T14_ATTACHMENT_DATA") STORE AS sys_lob0000876952c00003$$
+    (NOCACHE LOGGING CHUNK 8192)
+NOPARALLEL
+LOGGING
+MONITORING
+/

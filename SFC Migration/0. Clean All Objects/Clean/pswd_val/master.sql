@@ -1,0 +1,12 @@
+SPOOL log.run.password_validation APPEND
+
+WHENEVER SQLERROR EXIT
+SET ECHO OFF
+SET DEFINE OFF
+SET SQLBLANKLINES ON
+
+SELECT user || '-Login Successful!' AS Login_Status FROM DUAL;
+EXIT;
+
+SPOOL OFF
+

@@ -1,0 +1,12 @@
+SPOOL log.run.user.stat_gather REPLACE
+
+WHENEVER SQLERROR EXIT
+SET ECHO ON
+SET DEFINE OFF
+SET SQLBLANKLINES ON
+
+@@user.stat_gather.sql
+
+SPOOL OFF
+
+EXIT

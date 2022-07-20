@@ -1,0 +1,29 @@
+SQL> SET DEFINE OFF
+SQL> SET SQLBLANKLINES ON
+SQL> 
+SQL> @@dfn_price.price_grants.sql
+SQL> GRANT SELECT,
+  2  	   INSERT,
+  3  	   DELETE,
+  4  	   UPDATE
+  5  	 ON esp_transactions_complete
+  6  	 TO dfn_mig;
+
+Grant succeeded.
+
+SQL> GRANT SELECT,
+  2  	   INSERT,
+  3  	   DELETE,
+  4  	   UPDATE
+  5  	 ON esp_todays_snapshots
+  6  	 TO dfn_mig;
+
+Grant succeeded.
+
+SQL> 
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> 
+SQL> SPOOL OFF

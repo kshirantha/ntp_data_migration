@@ -1,0 +1,81 @@
+CREATE OR REPLACE FORCE VIEW dfn_ntp.vw_a07_approval_column_audit
+(
+    a07_id,
+    a07_table,
+    a07_table_row_id,
+    a07_status_id_v01,
+    a07_next_status_id_v01,
+    a07_current_approval_level,
+    a07_no_of_approval,
+    a07_is_approval_completed,
+    a07_table_id_m53,
+    a07_table_description,
+    a07_column_description_m83,
+    a07_column_name_m83,
+    a07_current_value,
+    a07_new_value,
+    a07_ready_to_save_value,
+    a07_last_updated_date,
+    a07_last_update_by_id_u17,
+    a07_class,
+    a07_line_id_a03,
+    a07_created_date,
+    a07_created_by_id_u17,
+    a07_comment,
+    a07_action_on_approval,
+    a07_institute_id_m02,
+    next_status_description,
+    status_description,
+    a07_use_a03_ready_to_save,
+    description,
+    current_value,
+    a03_ready_to_save_value,
+    a07_dependant_no,
+    a07_is_sensitive_data,
+    is_sensitive_data,
+    a07_entitlement_id_v04
+)
+AS
+    SELECT a07.a07_id,
+           a07.a07_table,
+           a07.a07_table_row_id,
+           a07.a07_status_id_v01,
+           a07.a07_next_status_id_v01,
+           a07.a07_current_approval_level,
+           a07.a07_no_of_approval,
+           a07.a07_is_approval_completed,
+           a07.a07_table_id_m53,
+           a07.a07_table_description,
+           a07.a07_column_description_m83,
+           a07.a07_column_name_m83,
+           a07.a07_current_value,
+           a07.a07_new_value,
+           a07.a07_ready_to_save_value,
+           a07.a07_last_updated_date,
+           a07.a07_last_update_by_id_u17,
+           a07.a07_class,
+           a07.a07_line_id_a03,
+           a07.a07_created_date,
+           a07.a07_created_by_id_u17,
+           a07.a07_comment,
+           a07.a07_action_on_approval,
+           a07.a07_institute_id_m02,
+           next_status_list.v01_description AS next_status_description,
+           status_list.v01_description AS status_description,
+           a07.a07_use_a03_ready_to_save,
+           a03.a03_description AS description,
+           a03.a03_current_value AS current_value,
+           a03.a03_ready_to_save_value,
+           a07.a07_dependant_no,
+           a07.a07_is_sensitive_data,
+           CASE WHEN a07.a07_is_sensitive_data = 1 THEN 'Yes' ELSE 'No' END
+               AS is_sensitive_data,
+           a07.a07_entitlement_id_v04
+      FROM a07_approval_column_audit_all a07
+           JOIN a03_approval_audit_all a03
+               ON a07.a07_line_id_a03 = a03.a03_id
+           JOIN vw_status_list status_list
+               ON a07.a07_status_id_v01 = status_list.v01_id
+           JOIN vw_status_list next_status_list
+               ON a07.a07_next_status_id_v01 = next_status_list.v01_id
+/

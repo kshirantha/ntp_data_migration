@@ -1,0 +1,17 @@
+SQL> SET DEFINE OFF
+SQL> SET SQLBLANKLINES ON
+SQL> 
+SQL> @@user.stat_gather.sql
+SQL> BEGIN
+  2  	 DBMS_STATS.gather_schema_stats (
+  3  	     ownname		=> 'DFN_PRICE',
+  4  	     estimate_percent	=> DBMS_STATS.auto_sample_size,
+  5  	     cascade		=> TRUE,
+  6  	     degree		=> 3);
+  7  END;
+  8  /
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> SPOOL OFF
